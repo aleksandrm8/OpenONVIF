@@ -8,6 +8,9 @@
 #include "EventsEmitter.h"
 
 #define BUFFER_SIZE 128
+#define USER_EVENT_MESSAGE "message_from_user"
+#define USER_EVENT_FIFO "user_fifo_name"
+
 
 bool
 EventsEmitter::run() {
