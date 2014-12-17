@@ -195,6 +195,12 @@ add_library(OnvifSDK STATIC     ${SOURCES} ${HEADERS}
                                 ${WSD_FILES}
                                 ${OSDK_HEADERS}
                                 ${OSDK_SOURCES})
+add_library(OnvifSDK SHARED     ${SOURCES} ${HEADERS}
+                                ${OSDK_GEN_FILES}
+                                ${EVNT_FILES}
+                                ${WSD_FILES}
+                                ${OSDK_HEADERS}
+                                ${OSDK_SOURCES})
 
 target_link_libraries(OnvifSDK pthread)
 
