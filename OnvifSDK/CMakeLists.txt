@@ -189,12 +189,6 @@ file(GLOB EVNT_FILES ${PROJECT_SOURCE_DIR}/Eventing/*)
 file(GLOB OSDK_HEADERS ${PROJECT_SOURCE_DIR}/include/*.h)
 file(GLOB OSDK_SOURCES ${PROJECT_SOURCE_DIR}/source/*.cpp)
 
-add_library(OnvifSDK STATIC     ${SOURCES} ${HEADERS}
-                                ${OSDK_GEN_FILES}
-                                ${EVNT_FILES}
-                                ${WSD_FILES}
-                                ${OSDK_HEADERS}
-                                ${OSDK_SOURCES})
 add_library(OnvifSDK SHARED     ${SOURCES} ${HEADERS}
                                 ${OSDK_GEN_FILES}
                                 ${EVNT_FILES}
