@@ -83,6 +83,7 @@ DeviceInfoStorage::SetDeviceInfo( OnvifDevice::Type type,
     m_webservicePort = webservicePort;
 
     std::stringstream ss;
+    ss.imbue(std::locale("C"));
     ss << "http://" <<  m_deviceServiceXAddr << ":" << m_webservicePort;
     m_endpoint = ss.str();
     if( m_deviceServiceXAddr.empty() ) {
