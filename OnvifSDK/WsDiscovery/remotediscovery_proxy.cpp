@@ -193,9 +193,14 @@ public:
 private:
     static std::string url()
     {
-        std::stringstream ss;
-        ss << "soap.udp://" << WSDD_MULTICAT_IP << ":" << WSDD_MULTICAT_PORT;
-        return ss.str();
+        static std::string url;
+        if (url.empty())
+        {
+            std::stringstream ss;
+            ss << "soap.udp://" << WSDD_MULTICAT_IP << ":" << WSDD_MULTICAT_PORT;
+            url = ss.str();
+        }
+        return url;
     }
 
 private:
