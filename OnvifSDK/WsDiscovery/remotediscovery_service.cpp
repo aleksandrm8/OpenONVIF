@@ -186,7 +186,11 @@ public:
         }
 
         // Header
-        std::string relatesTo( soap_header()->wsa5__MessageID);
+        const SOAP_ENV__Header * local_header = soap_header();
+        if (!local_header) {
+            return SOAP_USER_ERROR;
+        }
+        std::string relatesTo( local_header->wsa5__MessageID);
         wsa_.request("", SOAP_NAMESPACE_OF_wsd"/ProbeMatches");
         wsa_.addRelatesTo(relatesTo);
         wsa_.addAppSequence();
