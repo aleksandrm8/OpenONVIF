@@ -15,6 +15,7 @@ add_definitions(-DSIGRLOG_OUTPUT=${SIGRLOG_OUTPUT})
 # SIGRLOG_FILENAME
 # output filename for logger
 add_definitions(-DSIGRLOG_FILENAME=\"oxxServerLog.ini\")
+set (CMAKE_BUILD_TYPE "Debug")
 
 # Onvif Device Types:
 set(SUPPORTED_TYPES NVT ALL)
