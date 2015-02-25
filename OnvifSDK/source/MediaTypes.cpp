@@ -66,7 +66,7 @@ MedCellLayout::getBase64Encoded() {
     std::string rez0 = packBitsEncoding( reinterpret_cast<const char*>(layout_), size_ );
     size_t enc_size;
     char* encoded = base64_encode( reinterpret_cast<const unsigned char*>( rez0.c_str() ), rez0.size(), &enc_size );
-    std::string out(encoded);
+    std::string out(encoded, enc_size);
 
     if(encoded)
         delete encoded;
