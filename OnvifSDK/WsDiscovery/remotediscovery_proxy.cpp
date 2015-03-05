@@ -200,7 +200,7 @@ private:
             ss << "soap.udp://" << WSDD_MULTICAT_IP << ":" << WSDD_MULTICAT_PORT;
             url = ss.str();
         }
-        return url.str().c_str();
+        return url.c_str();
     }
 
 private:
