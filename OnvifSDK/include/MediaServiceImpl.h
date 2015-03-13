@@ -23,7 +23,6 @@ public:
         MediaBindingService( data ),
         baseServer_( server ),
         handler_(handler) {
-            soap->recv_timeout = 1;
 	}
 
     MediaBindingService *copy() {
@@ -31,7 +30,10 @@ public:
     }
 
     virtual int dispatch() {
-        return MediaBindingService::dispatch();
+        if (strcmp("s:Envelope", this->soap->tag))
+            return MediaBindingService::dispatch();
+        else
+            return 0;
     }
 
     virtual void destroy() {
