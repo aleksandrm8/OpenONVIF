@@ -23,6 +23,7 @@ public:
         MediaBindingService( data ),
         baseServer_( server ),
         handler_(handler) {
+            soap->recv_timeout = 1;
 	}
 
     MediaBindingService *copy() {
