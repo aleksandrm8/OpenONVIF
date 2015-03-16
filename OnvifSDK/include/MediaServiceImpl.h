@@ -30,10 +30,7 @@ public:
     }
 
     virtual int dispatch() {
-        if (strcmp("s:Envelope", this->soap->tag))
             return MediaBindingService::dispatch();
-        else
-            return 0;
     }
 
     virtual void destroy() {

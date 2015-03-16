@@ -18,7 +18,6 @@ const std::string scopes =
 
 IOnvifServer * srv;
 EventsEmitter evEmm;
-OnvifTestServer handler;
 
 void sig_handler(int signo)
 {
@@ -44,9 +43,11 @@ int main()
         return -1;
 
     OnvifHandlers providedHandlers;
+    OnvifTestServer handler(srv);
     memset( providedHandlers.h_, 0, sizeof(providedHandlers.h_) );
     providedHandlers.h_[OnvifService::DEV] = &handler;
     providedHandlers.h_[OnvifService::EVNT] = &handler;
+    providedHandlers.h_[OnvifService::MEDIA] = &handler;
 
 
     if( srv->Init( providedHandlers ) != 0 )

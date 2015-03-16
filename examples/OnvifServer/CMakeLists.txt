@@ -13,6 +13,9 @@ add_definitions(-DSIGRLOG_OUTPUT=1)
 # output filename for logger
 add_definitions(-DSIGRLOG_FILENAME=\"oxxServerLog.ini\")
 
+ADD_DEFINITIONS(
+    	-std=c++11)
+
 if("${SDK}" STREQUAL "")
     message(FATAL_ERROR "Set SDK variable. OnvifSDK library wasn't provided")
 endif()
