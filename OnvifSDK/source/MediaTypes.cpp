@@ -58,7 +58,7 @@ MedCellLayout::MedCellLayout():
 
 MedCellLayout::~MedCellLayout() {
    if( layout_ )
-       delete layout_;
+       delete [] layout_;
 }
 
 std::string
