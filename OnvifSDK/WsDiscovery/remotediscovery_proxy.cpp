@@ -20,7 +20,7 @@ class RemoteDiscoveryProxy :
 
 public:
     RemoteDiscoveryProxy() :
-        RemoteDiscoveryBindingProxy(url().c_str(), SOAP_IO_UDP),
+        RemoteDiscoveryBindingProxy(url(), SOAP_IO_UDP),
         wsa_(RemoteDiscoveryBindingProxy::soap)
     {
         RemoteDiscoveryBindingProxy::soap->send_timeout = SEND_TIMEOUT;
@@ -191,11 +191,16 @@ public:
 //    }
 
 private:
-    static std::string url()
+    static const char * url()
     {
-        std::stringstream ss;
-        ss << "soap.udp://" << WSDD_MULTICAT_IP << ":" << WSDD_MULTICAT_PORT;
-        return ss.str();
+        static std::string url;
+        if (url.empty())
+        {
+            std::stringstream ss;
+            ss << "soap.udp://" << WSDD_MULTICAT_IP << ":" << WSDD_MULTICAT_PORT;
+            url = ss.str();
+        }
+        return url.c_str();
     }
 
 private:
