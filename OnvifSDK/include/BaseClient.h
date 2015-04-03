@@ -11,6 +11,7 @@
 #include "ReceiverClient.h"
 #include "RecordingClient.h"
 #include "EventingClient.h"
+#include "MediaClient.h"
 
 #include "discoverer.h"
 #include "NotificationConsumer.h"
@@ -34,6 +35,9 @@ public:
 #ifdef DEV_S
     virtual IOnvifDevMgmt* getDeviceClient();
 #endif
+#ifdef MEDIA_S
+    virtual IOnvifMedia* getMediaClient();
+#endif
 #ifdef DEVIO_S
     virtual IOnvifDevIO* getDeviceIOClient();
 #endif
@@ -56,6 +60,9 @@ private:
 
 #ifdef DEV_S
     DeviceClient* devClient_;
+#endif
+#ifdef MEDIA_S
+    MediaClient* medClient_;
 #endif
 #ifdef DEVIO_S
     DeviceIOClient* devIOClient_;

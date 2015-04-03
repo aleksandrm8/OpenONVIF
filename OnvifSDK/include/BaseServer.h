@@ -63,6 +63,10 @@ public:
     virtual MedVideoAnalyticsConfiguration CreateVAConf( const std::string& name,
                                                          const std::string& token,
                                                          CellDetectionLayout::Fill fill );
+	virtual MedMetadataConfiguration CreateMetadataConfig(bool ptz_status,
+															bool ptz_position,
+															bool analytics,
+                                                            std::string session_timeout);
     virtual void SendNotification();
 
     int SetDeviceInfo( OnvifDevice::Type type,

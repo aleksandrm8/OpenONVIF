@@ -35,6 +35,7 @@ public:
 
 virtual int GetProfile(const std::string & profileToken, MedGetProfileResponse & resp);
 virtual int GetProfiles(MedGetProfilesResponse &);
+virtual int GetMetadataConfigurations(MedGetMetadataConfigurationsResponse &);
 virtual int GetVideoSources(MedGetVideoSourcesResponse &);
 virtual int GetStreamUri( const std::string& token, std::string & uri);
 virtual int GetCompatibleVideoEncoderConfigurations( MedGetCompatibleVideoEncoderConfigurationsResponse& r );
@@ -47,6 +48,7 @@ virtual int AddVideoAnalyticsConfiguration( const std::string& profileToken,
 	MedVideoSource 						m_video_source;
     MedVideoSource 						m_radar_source;
     MedProfile 							m_video_profile;
+    MedMetadataConfiguration			m_metadata_configuration;
     MedProfile 							m_radar_data_profile;
     MedVideoAnalyticsConfiguration 		m_anal_conf;
     std::thread                         m_thread;

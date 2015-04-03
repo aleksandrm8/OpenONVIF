@@ -16,6 +16,11 @@ IOnvifDevMgmt* BaseClient::getDeviceClient() {
     return devClient_;
 }
 #endif
+#ifdef MEDIA_S
+IOnvifMedia* BaseClient::getMediaClient() {
+    return medClient_;
+}
+#endif
 #ifdef DEVIO_S
 IOnvifDevIO* BaseClient::getDeviceIOClient() {
     return devIOClient_;
@@ -42,6 +47,10 @@ BaseClient::~BaseClient()
     #ifdef DEV_S
     if (devClient_)
          delete devClient_;
+    #endif
+    #ifdef MEDIA_S
+    if (medClient_)
+         delete medClient_;
     #endif
     #ifdef DEVIO_S
     if (devIOClient_)
@@ -86,6 +95,9 @@ BaseClient::Init(const char* pchEndpoint) {
 #ifdef DEV_S
     devClient_ = new DeviceClient (pchEndpoint, soap_);
 #endif
+#ifdef MEDIA_S
+    medClient_ = new MediaClient (pchEndpoint, soap_);
+#endif
 #ifdef DEVIO_S
     devIOClient_ = new DeviceIOClient (pchEndpoint, soap_);
 #endif
@@ -107,7 +119,7 @@ BaseClient::Init(const char* pchEndpoint) {
         return -1;
     }
 
-    if( devClient_ )
+    if( devClient_ && medClient_)
         return 0;
 
     SIGRLOG (SIGRWARNING, "BaseClient::Init failed to create proxies" );

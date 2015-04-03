@@ -47,6 +47,20 @@ BaseServer::CreateVAConf( const std::string& name,
     return MedVideoAnalyticsConfiguration(soap_, name, token, fill);
 }
 
+MedMetadataConfiguration
+BaseServer::CreateMetadataConfig(bool ptz_status,
+								bool ptz_position,
+								bool analytics,
+                                std::string session_timeout)
+{
+	return MedMetadataConfiguration(soap_,
+									ptz_status,
+									ptz_position,
+									analytics,
+                                    session_timeout);
+
+}
+
 IOnvifService*
 BaseServer::createService(OnvifService::Type type, IOnvifHandler * handler) {
     IOnvifService* service = NULL;

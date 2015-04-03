@@ -70,3 +70,10 @@ MediaServiceImpl::AddVideoAnalyticsConfiguration( _trt__AddVideoAnalyticsConfigu
     return handler_->AddVideoAnalyticsConfiguration( trt__AddVideoAnalyticsConfiguration->ProfileToken,
                                                           trt__AddVideoAnalyticsConfiguration->ConfigurationToken );
 }
+
+int
+MediaServiceImpl::GetMetadataConfigurations(_trt__GetMetadataConfigurations* trt__GetMetadataConfigurations,
+											_trt__GetMetadataConfigurationsResponse* trt__GetMetadataConfigurationsResponse) {
+	MedGetMetadataConfigurationsResponse r(trt__GetMetadataConfigurationsResponse);
+	return handler_->GetMetadataConfigurations(r);
+}

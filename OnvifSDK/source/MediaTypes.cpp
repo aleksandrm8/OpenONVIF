@@ -417,7 +417,9 @@ MedVideoAnalyticsConfiguration::getFill( CellDetectionLayout::Fill & fill ) cons
 {\
 }
 
+CLASS_CTORS(trt, Med, GetProfile)
 CLASS_CTORS(trt, Med, GetProfileResponse)
+CLASS_CTORS(trt, Med, GetProfiles)
 CLASS_CTORS(trt, Med, GetProfilesResponse)
 CLASS_CTORS(trt, Med, GetVideoSourcesResponse)
 CLASS_CTORS(trt, Med, GetCompatibleVideoEncoderConfigurationsResponse)
@@ -450,6 +452,10 @@ MedGetProfilesResponse::AddProfile( MedProfile& prof ) {
     d->Profiles.push_back(prof.d);
 }
 
+int
+MedGetProfilesResponse::GetProfilesNum() {
+    return d->Profiles.size();
+}
 
 MedProfile::MedProfile( tt__Profile* pData) {
     d = pData;
@@ -506,6 +512,11 @@ MedProfile::AddVideoAnalytics( MedVideoAnalyticsConfiguration & an ) {
     d->VideoAnalyticsConfiguration = an.d;
 }
 
+void
+MedProfile::SetMetadataConfiguration(MedMetadataConfiguration & conf) {
+	d->MetadataConfiguration = conf.d;
+}
+
 MedVideoSource::MedVideoSource( soap * pSoap, const std::string& token,
                                 int w, int h, double frmRate) {
     d = soap_new_tt__VideoSource( pSoap );
@@ -534,6 +545,161 @@ MedGetCompatibleVideoEncoderConfigurationsResponse::AddVideoEnc( int w, int h ) 
 void
 MedGetCompatibleVideoAnalyticsConfigurationsResponse::AddVideoAn( MedVideoAnalyticsConfiguration & conf ) {
     d->Configurations.push_back( conf.d );
+}
+
+MedMulticastConfiguration::MedMulticastConfiguration(): d(NULL)
+{
+}
+
+MedMulticastConfiguration::MedMulticastConfiguration(soap * pSoap)
+{
+	this->d = soap_new_tt__MulticastConfiguration(pSoap);
+    this->d->Address = soap_new_tt__IPAddress(pSoap);
+    this->d->Address->Type = tt__IPType__IPv4;
+    static std::string ip_addr("10.176.2.1");
+    this->d->Address->IPv4Address = &ip_addr;
+    this->d->Port = 1234;
+    this->d->TTL = 123;
+    this->d->AutoStart = false;
+}
+
+MedMulticastConfiguration::MedMulticastConfiguration(tt__MulticastConfiguration * pData)
+{
+	this->d = pData;
+    if (this->d->Address == 0)
+    {
+        d->Address = soap_new_tt__IPAddress(this->d->soap);
+        this->d->Address->Type = tt__IPType__IPv4;
+        this->d->Port = 1234;
+        this->d->TTL = 123;
+        this->d->AutoStart = false;
+    }
+}
+
+MedPTZFilter::MedPTZFilter(): d(NULL)
+{
+}
+
+MedPTZFilter::MedPTZFilter(soap * pSoap)
+{
+	this->d = soap_new_tt__PTZFilter(pSoap);
+}
+
+MedPTZFilter::MedPTZFilter(tt__PTZFilter* pData)
+{
+	this->d = pData;
+}
+
+MedPTZFilter::MedPTZFilter(soap* pSoap, bool status, bool position)
+{
+	this->d = soap_new_tt__PTZFilter(pSoap);
+	this->d->Status = status;
+	this->d->Position = position;
+}
+
+void
+MedPTZFilter::SetStatus(bool status) {
+	d->Status = status;
+	return;
+}
+
+bool
+MedPTZFilter::GetStatus() {
+	return d->Status;
+}
+
+bool
+MedPTZFilter::GetPosition() {
+	return d->Position;
+}
+
+void
+MedPTZFilter::SetPosition(bool position) {
+	d->Position = position;
+	return;
+}
+
+MedMetadataConfiguration::MedMetadataConfiguration():
+            m_analytics(NULL),
+			m_ptz_status(),
+            m_multicast_configuration(),
+            m_session_timeout(),
+			d(NULL)
+{
+}
+MedMetadataConfiguration::MedMetadataConfiguration(soap* pSoap):
+            m_analytics(NULL),
+			m_ptz_status(pSoap),
+            m_multicast_configuration(pSoap)
+{
+	d = soap_new_tt__MetadataConfiguration(pSoap);
+	d->PTZStatus = soap_new_tt__PTZFilter(pSoap, -1);
+    m_ptz_status.d = d->PTZStatus;
+    m_analytics = new bool();
+    *m_analytics = false;
+    d->Analytics = m_analytics;
+    d->Multicast = soap_new_tt__MulticastConfiguration(pSoap);
+    m_multicast_configuration.d = d->Multicast;
+    d->SessionTimeout = m_session_timeout;
+}
+
+MedMetadataConfiguration::MedMetadataConfiguration(tt__MetadataConfiguration* pData):
+            m_analytics(NULL),
+			m_ptz_status(pData->PTZStatus),
+            m_session_timeout(pData->SessionTimeout),
+            m_multicast_configuration(pData->Multicast)
+{
+	this->d = pData;
+    if(this->d->PTZStatus == 0)
+		this->d->PTZStatus = soap_new_tt__PTZFilter(this->d->soap, -1);
+    if(this->d->Analytics == 0)
+    {
+        m_analytics = new bool();
+        *m_analytics = false;
+        this->d->Analytics = m_analytics;
+    }
+    if(this->d->Multicast == 0)
+		this->d->Multicast = soap_new_tt__MulticastConfiguration(this->d->soap);
+}
+
+MedMetadataConfiguration::MedMetadataConfiguration(soap* pSoap,
+													bool ptz_status,
+													bool ptz_position,
+													bool analytics,
+                                                    std::string session_timeout):
+                                m_analytics(NULL),
+                                m_ptz_status(pSoap,
+                                             ptz_status,
+                                             ptz_position),
+                                m_multicast_configuration(pSoap),
+                                m_session_timeout(session_timeout)
+{
+	d = soap_new_tt__MetadataConfiguration(pSoap);
+    d->PTZStatus = m_ptz_status.d;
+    m_analytics = new bool();
+    *m_analytics = analytics;
+    d->Analytics = m_analytics;
+    d->Multicast = m_multicast_configuration.d;
+    d->SessionTimeout = session_timeout;
+#ifdef DEBUG
+#endif
+}
+
+MedMetadataConfiguration::~MedMetadataConfiguration()
+{
+    d->Analytics = NULL;
+    delete m_analytics;
+}
+
+#define EXTRA_CONSTRUCT() \
+{\
+}
+
+CLASS_CTORS(trt, Med, GetMetadataConfigurationsResponse)
+
+void MedGetMetadataConfigurationsResponse::AddMetadataConf(MedMetadataConfiguration & conf) {
+	d->Configurations.push_back(conf.d);
+	return;
 }
 
 #endif //MEDIA_S

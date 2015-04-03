@@ -41,8 +41,11 @@ OnvifTestServer::OnvifTestServer(IOnvifServer * server)
                                                     kFrmRate);
     m_video_profile 		= server->CreateMediaProfile(kVideoProfileName,
                                                          kVideoProfileToken);
+    m_metadata_configuration =
+            server->CreateMetadataConfig(false, false , false, "P5Y2M10DT15H");
     m_radar_data_profile 	= server->CreateMediaProfile(kRadarProfileName,
                                                          kRadarProfileToken);
+    m_radar_data_profile.SetMetadataConfiguration(m_metadata_configuration);
 
     m_anal_conf = server->CreateVAConf(   kVideoProfileName,
                                             kVideoProfileToken,
@@ -96,6 +99,12 @@ int OnvifTestServer::GetProfiles(MedGetProfilesResponse &t)
     t.AddProfile(m_radar_data_profile);
     return 0;
 }
+int OnvifTestServer::GetMetadataConfigurations(MedGetMetadataConfigurationsResponse &r)
+{
+    printf("OnvifTestServer::GetMetadataConfigurations\n");
+    r.AddMetadataConf(m_metadata_configuration);
+    return 0;
+}
 int OnvifTestServer::GetVideoSources(MedGetVideoSourcesResponse &t)
 {
     t.AddEntry(m_video_source);
@@ -117,8 +126,6 @@ std::string GetVideoUrl()
 int OnvifTestServer::GetStreamUri( const std::string& token, std::string & uri)
 {
     printf("OnvifTestServer::GetStreamUri\n");
-    //uri = "http://10.176.11.4:8181/stream_video_from_orwr_server";
-    //uri = "rtsp://10.176.11.4:8554/test.mpg";
 
     if (!token.compare(kRadarProfileToken))
     {

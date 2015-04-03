@@ -376,6 +376,7 @@ class MedVideoAnalyticsConfiguration {
 };
 
 class tt__Profile;
+class MedMetadataConfiguration;
 class MedProfile {
     public:
     MedProfile():
@@ -387,6 +388,7 @@ class MedProfile {
     void AddVideoSrc( const std::string & sourceToken, int w, int h );
     void AddVideoEnc( int w, int h );
     void AddVideoAnalytics(MedVideoAnalyticsConfiguration & );
+	void SetMetadataConfiguration(MedMetadataConfiguration & );
     const std::string & getToken();
     const std::string & getVAName();
     MedVideoAnalyticsConfiguration getVideoAnalytics() const;
@@ -403,12 +405,19 @@ class MedVideoSource {
     tt__VideoSource* d;
 };
 
+CLASS_DEFINITION_BEGIN(trt, Med, GetProfile)
+CLASS_DEFINITION_END()
+
 CLASS_DEFINITION_BEGIN(trt, Med, GetProfileResponse)
     void SetProfile( MedProfile&);
 CLASS_DEFINITION_END()
 
+CLASS_DEFINITION_BEGIN(trt, Med, GetProfiles)
+CLASS_DEFINITION_END()
+
 CLASS_DEFINITION_BEGIN(trt, Med, GetProfilesResponse)
     void AddProfile( MedProfile&);
+    int GetProfilesNum();
 CLASS_DEFINITION_END()
 
 CLASS_DEFINITION_BEGIN(trt, Med, GetVideoSourcesResponse)
@@ -425,6 +434,76 @@ CLASS_DEFINITION_BEGIN(trt, Med, GetCompatibleVideoAnalyticsConfigurationsRespon
     void AddVideoAn( MedVideoAnalyticsConfiguration& );
 CLASS_DEFINITION_END()
 
+
+//CLASS_DEFINITION_BEGIN(tt, Med, PTZFilter)
+class tt__PTZFilter;
+class MedPTZFilter
+{
+public:
+	MedPTZFilter( );
+	MedPTZFilter(soap *);
+	MedPTZFilter(soap *, bool status, bool position);
+	MedPTZFilter(tt__PTZFilter *);
+	tt__PTZFilter * d;
+	// True if the metadata stream shall contain
+	// the PTZ status (IDLE, MOVING or UNKNOWN)
+	bool GetStatus();
+	void SetStatus(bool status);
+	// True if the metadata stream shall contain the PTZ position
+	bool GetPosition();
+	void SetPosition(bool position);
+};
+
+CLASS_DEFINITION_BEGIN(tt, Med, EventSubscription)
+CLASS_DEFINITION_END()
+
+class tt__MulticastConfiguration;
+class MedMulticastConfiguration
+{
+public:
+    MedMulticastConfiguration();
+    MedMulticastConfiguration(soap * pSoap);
+    MedMulticastConfiguration(tt__MulticastConfiguration *);
+    tt__MulticastConfiguration *d;
+};
+
+class tt__MetadataConfiguration;
+class MedMetadataConfiguration
+{
+public:
+	MedMetadataConfiguration();
+	MedMetadataConfiguration(soap *pSoap);
+	MedMetadataConfiguration( tt__MetadataConfiguration *);
+	MedMetadataConfiguration( soap * ,
+							bool ptz_status,
+							bool ptz_position,
+							bool analytics,
+                            std::string session_timeout);
+    ~MedMetadataConfiguration();
+
+
+	MedPTZFilter GetPTZStatus();
+	void SetPTZStatus(MedPTZFilter&);
+	void SetEvents(MedEventSubscription&);
+
+	void SetAnalytics(bool);
+	bool GetAnalytics();
+
+	void SetMulticastConfiguration(MedMulticastConfiguration&);
+	MedMulticastConfiguration GetMulticastConfiguration();
+
+	tt__MetadataConfiguration * d;
+private:
+	MedPTZFilter	            m_ptz_status;
+    MedMulticastConfiguration   m_multicast_configuration;
+    bool                        *m_analytics;
+    std::string                 m_session_timeout;
+};
+
+CLASS_DEFINITION_BEGIN(trt, Med, GetMetadataConfigurationsResponse)
+    void AddMetadataConf( MedMetadataConfiguration& );
+CLASS_DEFINITION_END()
+
 /////////////////////////////////////////////////////////////////////////////////////
 
 class IOnvifMedia:
@@ -432,6 +511,7 @@ class IOnvifMedia:
 public:
     virtual int GetProfile(const std::string & profileToken, MedGetProfileResponse & resp) = 0;
     virtual int GetProfiles(MedGetProfilesResponse &) = 0;
+    virtual int GetMetadataConfigurations(MedGetMetadataConfigurationsResponse &) = 0;
     virtual int GetVideoSources(MedGetVideoSourcesResponse &) = 0;
     virtual int GetStreamUri( const std::string& token, std::string & uri) = 0;
     virtual int GetCompatibleVideoEncoderConfigurations( MedGetCompatibleVideoEncoderConfigurationsResponse& r ) = 0;
@@ -511,6 +591,10 @@ public:
     virtual MedVideoAnalyticsConfiguration CreateVAConf( const std::string& name,
                                                          const std::string& token,
                                                          CellDetectionLayout::Fill fill ) = 0;
+	virtual MedMetadataConfiguration CreateMetadataConfig(bool ptz_status,
+											bool ptz_position,
+											bool analytics,
+											std::string session_timeout) = 0;
     virtual std::string GetIp() = 0;
     virtual int Run() = 0;
     virtual void SendNotification() = 0;
@@ -546,6 +630,9 @@ public:
 
 #ifdef DEV_S
     virtual IOnvifDevMgmt* getDeviceClient() = 0;
+#endif
+#ifdef MEDIA_S
+    virtual IOnvifMedia* getMediaClient() = 0;
 #endif
 #ifdef DEVIO_S
     virtual IOnvifDevIO* getDeviceIOClient() = 0;
