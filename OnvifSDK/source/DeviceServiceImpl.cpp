@@ -1,14 +1,24 @@
 #include "DeviceServiceImpl.h"
 
 #ifdef DEV_S
+
+#include <set>
+#include <string.h>
+
 #include "sigrlog.h"
+#include "wsseapi.h"
 #include "BaseServer.h"
+#include "Authenticate.h"
 
 int
 DeviceServiceImpl::GetSystemDateAndTime( _tds__GetSystemDateAndTime *tds__GetSystemDateAndTime,
                                          _tds__GetSystemDateAndTimeResponse *tds__GetSystemDateAndTimeResponse ) {
+    int nRes = Verify(handler_, soap);
+    if (SOAP_OK != nRes)
+        return nRes;
+
 	DevGetSystemDateAndTimeResponse dt(tds__GetSystemDateAndTimeResponse);
-    int nRes = handler_->GetDateAndTime(dt);
+    nRes = handler_->GetDateAndTime(dt);
 	CHECKRETURN(nRes, "DeviceServiceImpl::GetSystemDateAndTime");
 }
 
@@ -20,13 +30,16 @@ DeviceBindingService* DeviceServiceImpl::copy() {
 int
 DeviceServiceImpl::SetSystemDateAndTime( _tds__SetSystemDateAndTime *tds__SetSystemDateAndTime,
                                          _tds__SetSystemDateAndTimeResponse *tds__SetSystemDateAndTimeResponse ) {
+    int nRes = Verify(handler_, soap);
+    if (SOAP_OK != nRes)
+        return nRes;
     if(tds__SetSystemDateAndTime->DateTimeType != tt__SetDateTimeType__Manual) {
 		SIGRLOG(SIGRWARNING, "DeviceServiceImpl::SetSystemDateAndTime Time is not Manual");
 		return SOAP_ERR;
 	}
 
 	DevSetSystemDateAndTime dt(tds__SetSystemDateAndTime);
-    int nRes = handler_->SetDateAndTime(dt);
+    nRes = handler_->SetDateAndTime(dt, *soap);
 	CHECKRETURN(nRes, "DeviceServiceImpl::SetSystemDateAndTime");
 }
 
@@ -57,14 +70,58 @@ DeviceServiceImpl::GetDeviceInformation( _tds__GetDeviceInformation *tds__GetDev
 int
 DeviceServiceImpl::GetUsers( _tds__GetUsers *tds__GetUsers,
                              _tds__GetUsersResponse *tds__GetUsersResponse) {
+    int nRes = Verify(handler_, soap);
+    if (SOAP_OK != nRes)
+        return nRes;
+
 	DevGetUsersResponse resp(tds__GetUsersResponse);
-    int nRes = handler_->GetUsers(resp);
+    nRes = handler_->GetUsers(resp);
 	CHECKRETURN(nRes, "DeviceServiceImpl::GetUsers");
+}
+
+int
+DeviceServiceImpl::CreateUsers( _tds__CreateUsers *tds__CreateUsers,
+                             _tds__CreateUsersResponse *tds__CreateUsersResponse) {
+    int nRes = Verify(handler_, soap);
+    if (SOAP_OK != nRes)
+        return nRes;
+
+	DevCreateUsers recv(tds__CreateUsers);
+    nRes = handler_->CreateUsers(recv);
+	CHECKRETURN(nRes, "DeviceServiceImpl::CreateUsers");
+}
+
+int
+DeviceServiceImpl::DeleteUsers(_tds__DeleteUsers *tds__DeleteUsers,
+                                _tds__DeleteUsersResponse *tds__DeleteUsersResponse) {
+    int nRes = Verify(handler_, soap);
+    if (SOAP_OK != nRes)
+        return nRes;
+
+	DevDeleteUsers recv(tds__DeleteUsers);
+    nRes = handler_->DeleteUsers(recv);
+	CHECKRETURN(nRes, "DeviceServiceImpl::DeleteUsers");
+}
+
+int
+DeviceServiceImpl::SetUser(_tds__SetUser *tds__SetUser,
+                            _tds__SetUserResponse *tds__SetUserResponse) {
+    int nRes = Verify(handler_, soap);
+    if (SOAP_OK != nRes)
+        return nRes;
+
+	DevSetUser recv(tds__SetUser);
+    nRes = handler_->SetUser(recv);
+	CHECKRETURN(nRes, "DeviceServiceImpl::SetUser");
 }
 
 int
 DeviceServiceImpl::GetServices( _tds__GetServices *tds__GetServices,
                                 _tds__GetServicesResponse *tds__GetServicesResponse ) {
+
+    int nRes = Verify(handler_, soap);
+    if (SOAP_OK != nRes)
+        return nRes;
 	DevGetServices req(tds__GetServices);
     DevGetServicesResponse resp(tds__GetServicesResponse);
     if( req.d->IncludeCapability )

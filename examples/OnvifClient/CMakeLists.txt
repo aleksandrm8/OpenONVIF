@@ -33,5 +33,5 @@ set(SOURCES
 	${PROJECT_SOURCE_DIR}/mainClient.cpp)
 
 add_executable(OnvifTestClient ${SOURCES} ${HEADERS})
-target_link_libraries(OnvifTestClient ${SDKLIB} pthread)
+target_link_libraries(OnvifTestClient ${SDKLIB} ssl crypto pthread)
 

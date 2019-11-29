@@ -1,0 +1,40 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:		onvifserver-daemon
+# Required-Start:	$all
+# Required-Stop:
+# Default-Start:	1 2 3 4 5
+# Default-Stop:		0 6
+# Short-Description: 	ONVIF simple server
+# Description:       	Simple ONVIF server implementation for lookup
+### END INIT INFO
+echo -n "Starting onvif server."
+PROGRAMM_PATH=/usr/bin/OnvifTestServer
+LOG_PATH=/usr/bin/
+
+case $1 in
+	start)
+		if [ -d $LOG_PATH ]; then
+			cd $LOG_PATH
+			if [ -f $PROGRAMM_PATH ]; then
+				$PROGRAMM_PATH &
+			else
+				echo -n "$PROGRAMM_PATH not exist"
+			fi
+		else
+			echo -n "$LOG_PATH not exist"
+		fi
+		;;
+	stop)
+		;;
+	reload)
+		;;
+	restart|force-reload)
+		;;
+	status)
+		;;
+	*)
+		exit 1
+		;;
+esac
+exit

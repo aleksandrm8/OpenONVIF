@@ -20,8 +20,27 @@
 
 class soap;
 
+enum UsersRoles
+{
+    Administrator,
+    Operator,
+    User,
+    Anonymous,
+    Undefined
+};
+
+struct CUser
+{
+    std::string name;
+    std::string password;
+    UsersRoles role;
+};
+
+
 class IOnvifHandler {
 public:
+    virtual CUser GetUserInfo(const char *username) {return {"", "", Undefined}; };
+    virtual bool SecurityMode()  { return false; };
     virtual ~IOnvifHandler() = 0;
 };
 
@@ -49,8 +68,48 @@ CLASS_DEFINITION_BEGIN(tds, Dev, GetSystemDateAndTimeResponse)
     int GetUTCDateAndTime(int & year, int & month, int & day, int & hour, int & min, int & sec) const;
 CLASS_DEFINITION_END()
 
-
 /////////////////////////////////////////////////////////////////////////////////////
+
+inline std::string RoleToStr(UsersRoles role)
+{
+    switch (role)
+    {
+        case Administrator:
+            return "Administrator";
+        case Operator:
+            return "Operator";
+        case User:
+            return "User";
+        case Anonymous:
+            return "Anonymous";
+        default:
+            return "Undefined";
+    }
+}
+
+inline UsersRoles StrToRole(std::string &role)
+{
+    if (role == "Administrator")
+    {
+        return Administrator;
+    }
+    else if (role == "Operator")
+    {
+        return Operator;
+    }
+    else if (role == "User")
+    {
+        return User;
+    }
+    else if (role == "Anonymous")
+    {
+        return Anonymous;
+    }
+    else
+    {
+        return Undefined;
+    }
+}
 
 CLASS_DEFINITION_BEGIN(tds, Dev, GetUsers)
 CLASS_DEFINITION_END()
@@ -61,6 +120,32 @@ CLASS_DEFINITION_BEGIN(tds, Dev, GetUsersResponse)
     int GetUsers(std::vector<std::string> & users) const;
 CLASS_DEFINITION_END()
 
+/////////////////////////////////////////////////////////////////////////////////////
+
+CLASS_DEFINITION_BEGIN(tds, Dev, CreateUsers)
+    int GetUsers(std::vector<CUser> & users) const;
+CLASS_DEFINITION_END()
+
+CLASS_DEFINITION_BEGIN(tds, Dev, CreateUsersResponse)
+CLASS_DEFINITION_END()
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+CLASS_DEFINITION_BEGIN(tds, Dev, DeleteUsers)
+    int GetUsers(std::vector<std::string> & users) const;
+CLASS_DEFINITION_END()
+
+CLASS_DEFINITION_BEGIN(tds, Dev, DeleteUsersResponse)
+CLASS_DEFINITION_END()
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+CLASS_DEFINITION_BEGIN(tds, Dev, SetUser)
+    int GetUsers(std::vector<CUser> & users) const;
+CLASS_DEFINITION_END()
+
+CLASS_DEFINITION_BEGIN(tds, Dev, SetUserResponse)
+CLASS_DEFINITION_END()
 
 /////////////////////////////////////////////////////////////////////////////////////
 
@@ -112,8 +197,11 @@ class IOnvifDevMgmt:
     public virtual IOnvifHandler {
 public:
     virtual int GetDateAndTime( /*out*/ DevGetSystemDateAndTimeResponse & ) = 0;
-    virtual int SetDateAndTime( DevSetSystemDateAndTime & ) = 0;
+    virtual int SetDateAndTime( DevSetSystemDateAndTime &, struct soap & ) = 0;
     virtual int GetUsers( /*out*/ DevGetUsersResponse & ) = 0;
+    virtual int CreateUsers( DevCreateUsers & ) = 0;
+    virtual int DeleteUsers( DevDeleteUsers & ) = 0;
+    virtual int SetUser( DevSetUser & ) = 0;
 };
 
 #endif // DEV_S
@@ -512,7 +600,7 @@ public:
                                                          const std::string& token,
                                                          CellDetectionLayout::Fill fill ) = 0;
     virtual std::string GetIp() = 0;
-    virtual int Run() = 0;
+    virtual int Run(bool&) = 0;
     virtual void SendNotification() = 0;
 };
 

@@ -18,7 +18,7 @@
 # -----------------------------------------------------
 # GSOAP Import Directories
 # -----------------------------------------------------
-set(GSOAP_IMPORT_DIR "/usr/local/share/gsoap/import")
+set(GSOAP_IMPORT_DIR "/usr/share/gsoap/import")
 
 # -----------------------------------------------------
 # GSOAP Libraries

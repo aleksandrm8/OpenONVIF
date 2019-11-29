@@ -60,7 +60,7 @@ static const char * loglevel [SIGREND] = {"CRITICAL", "WARNING", "DEBUG0","DEBUG
     if(nRes != 0) \
     {\
         SIGRLOG(SIGRWARNING, "%s failed!", str);\
-        return -1;\
+        return nRes;\
     }\
     else\
     {\

@@ -15,7 +15,6 @@ add_definitions(-DSIGRLOG_OUTPUT=${SIGRLOG_OUTPUT})
 # SIGRLOG_FILENAME
 # output filename for logger
 add_definitions(-DSIGRLOG_FILENAME=\"oxxServerLog.ini\")
-set (CMAKE_BUILD_TYPE "Debug")
 
 # Onvif Device Types:
 set(SUPPORTED_TYPES NVT ALL)
@@ -38,6 +37,8 @@ message(STATUS "The GSOAP plugin directory: ${GSOAP_PLUGIN_DIR}")
 
 add_definitions(-DWITH_PURE_VIRTUAL)
 add_definitions(-DWITH_NONAMESPACES)
+add_definitions(-DWITH_DOM)
+add_definitions(-DWITH_OPENSSL)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 
 set(OSDK_GEN_SOURCE_DIR ${PROJECT_BINARY_DIR}/src)
@@ -173,6 +174,7 @@ set(HEADERS
     ${PROJECT_SOURCE_DIR}/../common/sigrlog.h
     ${PROJECT_SOURCE_DIR}/../common/helpers.h
     ${PROJECT_SOURCE_DIR}/gen/include/stdsoap2.h
+    ${PROJECT_SOURCE_DIR}/gen/include/threads.h
     ${PROJECT_SOURCE_DIR}/include/stringGenerator.h
     ${PROJECT_SOURCE_DIR}/include/BaseServer.h
     ${PROJECT_SOURCE_DIR}/include/BaseClient.h
@@ -180,6 +182,11 @@ set(HEADERS
 
 set(SOURCES
     ${PROJECT_SOURCE_DIR}/gen/source/stdsoap2.cpp
+    ${PROJECT_SOURCE_DIR}/gen/source/wsseapi.cpp
+    ${PROJECT_SOURCE_DIR}/gen/source/wsaapi.cpp
+    ${PROJECT_SOURCE_DIR}/gen/source/mecevp.cpp
+    ${PROJECT_SOURCE_DIR}/gen/source/smdevp.cpp
+    ${PROJECT_SOURCE_DIR}/gen/source/dom.cpp
     ${PROJECT_SOURCE_DIR}/source/BaseServer.cpp
     ${PROJECT_SOURCE_DIR}/source/BaseClient.cpp
     ${PROJECT_SOURCE_DIR}/../common/helpers.cpp)

@@ -110,13 +110,13 @@ public:
 	virtual	int GetUsers(_tds__GetUsers *tds__GetUsers, _tds__GetUsersResponse *tds__GetUsersResponse);
 
 	/// Web service operation 'CreateUsers' (returns error code or SOAP_OK)
-	virtual	int CreateUsers(_tds__CreateUsers *tds__CreateUsers, _tds__CreateUsersResponse *tds__CreateUsersResponse) {return SOAP_OK;};
+	virtual	int CreateUsers(_tds__CreateUsers *tds__CreateUsers, _tds__CreateUsersResponse *tds__CreateUsersResponse);
 
 	/// Web service operation 'DeleteUsers' (returns error code or SOAP_OK)
-	virtual	int DeleteUsers(_tds__DeleteUsers *tds__DeleteUsers, _tds__DeleteUsersResponse *tds__DeleteUsersResponse) {return SOAP_OK;};
+	virtual	int DeleteUsers(_tds__DeleteUsers *tds__DeleteUsers, _tds__DeleteUsersResponse *tds__DeleteUsersResponse);
 
 	/// Web service operation 'SetUser' (returns error code or SOAP_OK)
-	virtual	int SetUser(_tds__SetUser *tds__SetUser, _tds__SetUserResponse *tds__SetUserResponse) {return SOAP_OK;};
+	virtual	int SetUser(_tds__SetUser *tds__SetUser, _tds__SetUserResponse *tds__SetUserResponse);
 
 	/// Web service operation 'GetWsdlUrl' (returns error code or SOAP_OK)
 	virtual	int GetWsdlUrl(_tds__GetWsdlUrl *tds__GetWsdlUrl, _tds__GetWsdlUrlResponse *tds__GetWsdlUrlResponse) {return SOAP_OK;};

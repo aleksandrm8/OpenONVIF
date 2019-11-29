@@ -8,8 +8,8 @@
 #include "EventsEmitter.h"
 
 const std::string scopes =
-"onvif://www.onvif.org/name/OnvifSDKExample "
-"onvif://www.onvif.org/hardware/OnvifSDKExampleHardware "
+"onvif://www.onvif.org/name/VisorJet720 "
+"onvif://www.onvif.org/hardware/Vip1 "
 "onvif://www.onvif.org/type/NetworkVideoTransmitter "
 "onvif://www.onvif.org/type/video_encoder "
 "onvif://www.onvif.org/type/audio_encoder "
@@ -18,7 +18,6 @@ const std::string scopes =
 
 IOnvifServer * srv;
 EventsEmitter evEmm;
-OnvifTestServer handler;
 
 void sig_handler(int signo)
 {
@@ -27,7 +26,7 @@ void sig_handler(int signo)
     exit(0);
 }
 
-int main()
+int main(int argc, char **argv)
 {
     signal(SIGKILL, sig_handler);
     signal(SIGSTOP, sig_handler);
@@ -35,24 +34,27 @@ int main()
     signal(SIGTERM, sig_handler);
 
     srv = getOnvifServer();
-    if( srv->SetDeviceInfo( OnvifDevice::NVT, "manufacturerName",
+    if( srv->SetDeviceInfo( OnvifDevice::NVT, "ELVEES",
                             "Model No 007", "1.0", "000.000.001",
-                            "1.1", scopes, "eth0", 8080 ) != 0 )
+                            "1.1", scopes,
+                            argc > 1 ? argv[1] : onvif_server::OnvifTestServer::kInterfaceName, 8081 ) != 0 )
         return -1;
 
     if( !evEmm.run() )
         return -1;
 
     OnvifHandlers providedHandlers;
+    onvif_server::OnvifTestServer handler(srv, {});
     memset( providedHandlers.h_, 0, sizeof(providedHandlers.h_) );
     providedHandlers.h_[OnvifService::DEV] = &handler;
     providedHandlers.h_[OnvifService::EVNT] = &handler;
+    providedHandlers.h_[OnvifService::MEDIA] = &handler;
 
 
     if( srv->Init( providedHandlers ) != 0 )
         return -1;
-
-    if( srv->Run() != 0 )
+    bool run_flag = true;
+    if( srv->Run(run_flag) != 0 )
         return -1;
 
     return 0;

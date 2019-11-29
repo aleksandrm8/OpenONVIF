@@ -111,6 +111,76 @@ int DevGetSystemDateAndTimeResponse::GetUTCDateAndTime(int & year, int & month, 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
+
+#define EXTRA_CONSTRUCT() \
+{\
+}
+
+CLASS_CTORS(tds, Dev, CreateUsers)
+
+int DevCreateUsers::GetUsers(std::vector<CUser> & users) const
+{
+	for(size_t i = 0; i < this->d->User.size(); ++i)
+	{
+		users.push_back({
+                    this->d->User[i]->Username,
+                    *(this->d->User[i]->Password),
+
+                    this->d->User[i]->UserLevel == tt__UserLevel__Administrator ? Administrator :
+                    this->d->User[i]->UserLevel == tt__UserLevel__Operator ? Operator :
+                    this->d->User[i]->UserLevel == tt__UserLevel__User ? User :
+                    this->d->User[i]->UserLevel == tt__UserLevel__Anonymous ? Anonymous :
+                        Undefined
+                });
+	}
+
+	return 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+#define EXTRA_CONSTRUCT() \
+{\
+}
+
+CLASS_CTORS(tds, Dev, CreateUsersResponse)
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+#define EXTRA_CONSTRUCT() \
+{\
+}
+
+CLASS_CTORS(tds, Dev, DeleteUsers)
+
+int DevDeleteUsers::GetUsers(std::vector<std::string> & usernames) const
+{
+	for(size_t i = 0; i < this->d->Username.size(); ++i)
+	{
+		usernames.push_back(this->d->Username[i]);
+	}
+
+	return 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+#define EXTRA_CONSTRUCT() \
+{\
+}
+
+CLASS_CTORS(tds, Dev, DeleteUsersResponse)
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
 #define EXTRA_CONSTRUCT() \
 {\
 }
@@ -162,6 +232,41 @@ int DevGetUsersResponse::GetUsers(std::vector<std::string> & users) const
 
 	return 0;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+
+#define EXTRA_CONSTRUCT() \
+{\
+}
+
+CLASS_CTORS(tds, Dev, SetUser)
+
+int DevSetUser::GetUsers(std::vector<CUser> & users) const
+{
+	for(size_t i = 0; i < this->d->User.size(); ++i)
+	{
+		users.push_back({
+                    this->d->User[i]->Username,
+                    *(this->d->User[i]->Password),
+
+                    this->d->User[i]->UserLevel == tt__UserLevel__Administrator ? Administrator :
+                    this->d->User[i]->UserLevel == tt__UserLevel__Operator ? Operator :
+                    this->d->User[i]->UserLevel == tt__UserLevel__User ? User :
+                    this->d->User[i]->UserLevel == tt__UserLevel__Anonymous ? Anonymous :
+                        Undefined
+                });
+	}
+
+	return 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+#define EXTRA_CONSTRUCT() \
+{\
+}
+
+CLASS_CTORS(tds, Dev, SetUserResponse)
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -242,7 +347,7 @@ int DevGetCapabilitiesResponse::SetDeviceCapabilities(const std::string & xaddr)
     d->Capabilities->Device->System->DiscoveryBye = true;
     d->Capabilities->Device->System->RemoteDiscovery = true;
     d->Capabilities->Device->System->SystemBackup = false;
-    d->Capabilities->Device->System->SystemLogging = true;
+    d->Capabilities->Device->System->SystemLogging = false;
     d->Capabilities->Device->System->FirmwareUpgrade = false;
 	return 0;
 }
@@ -264,8 +369,8 @@ int DevGetCapabilitiesResponse::SetMediaCapabilities(const std::string & xaddr) 
 
 int DevGetCapabilitiesResponse::SetAnalyticsCapabilities(const std::string & xaddr) {
     d->Capabilities->Analytics->XAddr = xaddr;
-    d->Capabilities->Analytics->AnalyticsModuleSupport = true;
-    d->Capabilities->Analytics->RuleSupport = true;
+    d->Capabilities->Analytics->AnalyticsModuleSupport = false;
+    d->Capabilities->Analytics->RuleSupport = false;
     return 0;
 }
 

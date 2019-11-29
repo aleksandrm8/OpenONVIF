@@ -13,6 +13,8 @@ add_definitions(-DSIGRLOG_OUTPUT=1)
 # output filename for logger
 add_definitions(-DSIGRLOG_FILENAME=\"oxxServerLog.ini\")
 
+ADD_DEFINITIONS(-std=c++11)
+
 if("${SDK}" STREQUAL "")
     message(FATAL_ERROR "Set SDK variable. OnvifSDK library wasn't provided")
 endif()
@@ -25,6 +27,7 @@ message(STATUS "OSDK Library : ${SDKLIB}")
 
 include_directories(${PROJECT_SOURCE_DIR}/../../common
                     ${PROJECT_SOURCE_DIR}/../../OnvifSDK/include
+                    ${PROJECT_SOURCE_DIR}/../../OnvifSDK/gen/include
                     ${PROJECT_SOURCE_DIR}
                     ${SDK})
 
@@ -35,5 +38,5 @@ set(INC ${PROJECT_SOURCE_DIR}/../../OnvifSDK/include/OnvifSDK.h
 file( GLOB HEADERS ${PROJECT_SOURCE_DIR}/*.h )
 file( GLOB SOURCES ${PROJECT_SOURCE_DIR}/*.cpp )
 add_executable(OnvifTestServer  ${INC} ${HEADERS} ${SOURCES})
-target_link_libraries(OnvifTestServer ${SDKLIB} pthread)
+target_link_libraries(OnvifTestServer ${SDKLIB} ssl crypto pthread)
 

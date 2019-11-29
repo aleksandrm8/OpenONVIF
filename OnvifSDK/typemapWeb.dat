@@ -1,5 +1,3 @@
-
-
 xop	= <http://www.w3.org/2004/08/xop/include>
 wsa5	= <http://www.w3.org/2005/08/addressing>
 
@@ -33,3 +31,7 @@ dnrd= "http://www.onvif.org/ver10/network/wsdl/RemoteDiscoveryBinding"
 dndl= "http://www.onvif.org/ver10/network/wsdl/DiscoveryLookupBinding"
 
 _tt__ItemList_ElementItem = $ tt__CellLayout* Layout 0;
+
+[
+#import "wsse.h"
+]

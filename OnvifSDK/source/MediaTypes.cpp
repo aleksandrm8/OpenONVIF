@@ -69,7 +69,7 @@ MedCellLayout::getBase64Encoded() {
     std::string out(encoded, enc_size);
 
     if(encoded)
-        delete encoded;
+        delete [] encoded;
     return out;
 }
 
@@ -483,6 +483,7 @@ MedProfile::AddVideoEnc( int w, int h ) {
     d->VideoEncoderConfiguration->Resolution = soap_new_tt__VideoResolution(d->soap, -1);
     d->VideoEncoderConfiguration->Resolution->Width = w;
     d->VideoEncoderConfiguration->Resolution->Height = h;
+    d->VideoEncoderConfiguration->SessionTimeout = "P1M";
 }
 
 const std::string &

@@ -14,9 +14,12 @@ public:
     virtual ~DeviceClient() {
     }
 
-    int SetDateAndTime( DevSetSystemDateAndTime & );
+    int SetDateAndTime( DevSetSystemDateAndTime &, struct soap & );
 	int GetDateAndTime(DevGetSystemDateAndTimeResponse &);
     int GetUsers(DevGetUsersResponse &);
+    int CreateUsers(DevCreateUsers &);
+    int DeleteUsers(DevDeleteUsers &);
+    int SetUser(DevSetUser &);
 
 private:
 	DeviceBindingProxy m_proxy;

@@ -1,4 +1,5 @@
 
+#include "Authenticate.h"
 #include "MediaServiceImpl.h"
 #include "BaseServer.h"
 
@@ -21,6 +22,9 @@ MediaServiceImpl::GetStreamUri( _trt__GetStreamUri *trt__GetStreamUri,
 int
 MediaServiceImpl::GetVideoSources( _trt__GetVideoSources *trt__GetVideoSources,
                                    _trt__GetVideoSourcesResponse *trt__GetVideoSourcesResponse ) {
+    int nRes = Verify(handler_, soap);
+    if (SOAP_OK != nRes)
+        return nRes;
     MedGetVideoSourcesResponse r( trt__GetVideoSourcesResponse );
     return handler_->GetVideoSources(r);
 }
@@ -28,6 +32,9 @@ MediaServiceImpl::GetVideoSources( _trt__GetVideoSources *trt__GetVideoSources,
 int
 MediaServiceImpl::GetProfiles( _trt__GetProfiles *trt__GetProfiles,
                                _trt__GetProfilesResponse *trt__GetProfilesResponse ) {
+    int nRes = Verify(handler_, soap);
+    if (SOAP_OK != nRes)
+        return nRes;
     MedGetProfilesResponse r( trt__GetProfilesResponse );
     return handler_->GetProfiles(r);
 }
@@ -35,6 +42,9 @@ MediaServiceImpl::GetProfiles( _trt__GetProfiles *trt__GetProfiles,
 int
 MediaServiceImpl::GetProfile( _trt__GetProfile *trt__GetProfile,
                               _trt__GetProfileResponse *trt__GetProfileResponse) {
+    int nRes = Verify(handler_, soap);
+    if (SOAP_OK != nRes)
+        return nRes;
     MedGetProfileResponse r( trt__GetProfileResponse );
     return handler_->GetProfile( trt__GetProfile->ProfileToken, r );
 }
